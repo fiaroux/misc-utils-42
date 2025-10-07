@@ -1,9 +1,6 @@
 # Environment variables
 .env
 
-# Status tracking
-availability_status.json
-
 # Python
 __pycache__/
 *.pyc
