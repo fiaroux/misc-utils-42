@@ -12,7 +12,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
+# from webdriver_manager.chrome import ChromeDriverManager  # Commented out for GitHub Actions
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -61,7 +61,7 @@ def get_residence_links():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'), options=options)
     
     for page in range(1, 8):  # Assuming 7 pages
         if page == 1:
@@ -93,7 +93,7 @@ def check_availability(link):
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'), options=options)
     try:
         driver.get(link)
         # Wait for main content or availability spans
