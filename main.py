@@ -12,7 +12,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-# # from webdriver_manager.chrome import ChromeDriverManager  # Commented out for GitHub Actions  # Commented out for GitHub Actions
+# from webdriver_manager.chrome import ChromeDriverManager  # Commented out for GitHub Actions
 
 # Charger les variables d'environnement
 load_dotenv()
