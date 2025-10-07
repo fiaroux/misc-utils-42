@@ -12,7 +12,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-# from webdriver_manager.chrome import ChromeDriverManager  # Commented out for GitHub Actions
+# # from webdriver_manager.chrome import ChromeDriverManager  # Commented out for GitHub Actions  # Commented out for GitHub Actions
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -61,6 +61,8 @@ def get_residence_links():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--remote-debugging-port=9222')
     driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'), options=options)
     
     for page in range(1, 8):  # Assuming 7 pages
@@ -93,6 +95,8 @@ def check_availability(link):
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--remote-debugging-port=9222')
     driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'), options=options)
     try:
         driver.get(link)
@@ -126,10 +130,12 @@ def check_availability(link):
                 text = span.text.strip().lower()
                 classes = span.get_attribute('class')
                 has_button = len(td.find_elements(By.CSS_SELECTOR, 'a.btn_reserver')) > 0
-                if has_button:
-                    statuses.append('disponible_immediat')
-                elif 'aucune disponibilité' in text:
+                
+                # Priorité au texte "aucune disponibilité"
+                if 'aucune disponibilité' in text:
                     statuses.append('indisponible')
+                elif has_button:
+                    statuses.append('disponible_immediat')
                 elif 'disponibilité à venir' in text:
                     statuses.append('a_venir')
                 elif 'disponible' in text or 'immédiate' in text:
@@ -164,60 +170,47 @@ def main():
     links = get_residence_links()
     print(f"Trouvé {len(links)} résidences.")
     
-    previous_statuses = load_previous_statuses()
-    current_statuses = {}
-    changes = []
+    available_residences = []
     
     for link in links:
         status = check_availability(link)
-        current_statuses[link] = status
         
-        # Fonction pour convertir le statut en texte lisible
-        def status_to_text(s):
-            if s is True:
-                return "Disponible"
-            elif s == 'soon':
-                return "Disponibilité à venir"
-            elif s is False:
-                return "Indisponible"
-            else:
-                return "Statut inconnu"
-        
-        # Détecter les changements
-        prev_status = previous_statuses.get(link)
-        if prev_status != status:
-            if prev_status is None:
-                change_msg = f"Nouveau suivi : {link} - Statut: {status_to_text(status)}"
-            else:
-                change_msg = f"Changement détecté : {link}\nAncien: {status_to_text(prev_status)} → Nouveau: {status_to_text(status)}"
-            changes.append(change_msg)
-            print(change_msg)
+        if status is True:
+            # Extraire le nom de la résidence depuis l'URL
+            residence_name = link.split('/')[-1].replace('-', ' ').title()
+            available_residences.append(f"🏠 {residence_name}\n🔗 {link}")
+            print(f"Disponibilité trouvée : {link}")
+        elif status == 'soon':
+            print(f"Disponibilité à venir : {link}")
+        elif status is False:
+            print(f"Aucune disponibilité : {link}")
         else:
-            if status is True:
-                print(f"Disponibilité trouvée : {link}")
-            elif status == 'soon':
-                print(f"Disponibilité à venir : {link}")
-            elif status is False:
-                print(f"Aucune disponibilité : {link}")
-            else:
-                print(f"Statut inconnu : {link}")
+            print(f"Statut inconnu : {link}")
         
         time.sleep(1)
     
-    # Sauvegarder les nouveaux statuts
+    # Sauvegarder les statuts (pour référence future si besoin)
+    current_statuses = {link: check_availability(link) for link in links}
     save_statuses(current_statuses)
     
-    # Envoyer email si changements
-    if changes:
-        subject = "Changements de disponibilité Fac Habitat"
-        body = "\n\n".join(changes)
+    # Envoyer email quotidien avec les résidences disponibles
+    if available_residences:
+        subject = f"🏠 Résidences Fac Habitat Disponibles - {len(available_residences)} trouvées"
+        body = "Voici les résidences actuellement disponibles :\n\n" + "\n\n".join(available_residences)
         to_email = os.getenv('EMAIL_TO')
         if to_email:
             send_email(subject, body, to_email)
+            print(f"Email envoyé avec {len(available_residences)} résidences disponibles")
         else:
             print("Variable d'environnement EMAIL_TO non configurée. Aucun email envoyé.")
     else:
-        print("Aucun changement détecté.")
+        print("Aucune résidence disponible trouvée.")
+        # Optionnel : envoyer un email quand rien n'est disponible
+        # subject = "🏠 Aucune résidence Fac Habitat disponible"
+        # body = "Aucune résidence n'est actuellement disponible pour le moment."
+        # to_email = os.getenv('EMAIL_TO')
+        # if to_email:
+        #     send_email(subject, body, to_email)
 
 if __name__ == "__main__":
     main()
