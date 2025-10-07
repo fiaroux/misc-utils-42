@@ -172,13 +172,24 @@ def main():
         status = check_availability(link)
         current_statuses[link] = status
         
+        # Fonction pour convertir le statut en texte lisible
+        def status_to_text(s):
+            if s is True:
+                return "Disponible"
+            elif s == 'soon':
+                return "Disponibilité à venir"
+            elif s is False:
+                return "Indisponible"
+            else:
+                return "Statut inconnu"
+        
         # Détecter les changements
         prev_status = previous_statuses.get(link)
         if prev_status != status:
             if prev_status is None:
-                change_msg = f"Nouveau suivi : {link} - Statut: {status}"
+                change_msg = f"Nouveau suivi : {link} - Statut: {status_to_text(status)}"
             else:
-                change_msg = f"Changement détecté : {link}\nAncien: {prev_status} → Nouveau: {status}"
+                change_msg = f"Changement détecté : {link}\nAncien: {status_to_text(prev_status)} → Nouveau: {status_to_text(status)}"
             changes.append(change_msg)
             print(change_msg)
         else:
