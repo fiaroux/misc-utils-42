@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import time
-import json
 import smtplib
 import os
 from dotenv import load_dotenv
@@ -16,17 +15,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # Charger les variables d'environnement
 load_dotenv()
-
-def load_previous_statuses():
-    try:
-        with open('availability_status.json', 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
-
-def save_statuses(statuses):
-    with open('availability_status.json', 'w') as f:
-        json.dump(statuses, f, indent=4)
 
 def send_email(subject, body, to_email):
     from_email = os.getenv('EMAIL_USER')
@@ -92,14 +80,57 @@ def get_residence_links():
 
 def check_availability(link):
     options = webdriver.ChromeOptions()
+    options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument('--remote-debugging-port=9222')
-    driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'), options=options)
+    driver = webdriver.Chrome(service=Service('/opt/homebrew/bin/chromedriver'), options=options)
     try:
         driver.get(link)
+        
+        # Extract city
+        try:
+            # Try common selectors for city/location
+            city_selectors = [
+                '.breadcrumb li:last-child',  # Breadcrumb last item
+                'h1',  # Main title
+                '.ville',  # Ville class
+                '.city',  # City class
+                'span.location',  # Location span
+                'div.location',  # Location div
+                'h1 + p',  # Paragraph after h1
+                '[class*="ville"]',  # Any element with ville in class
+                '[class*="city"]'  # Any element with city in class
+            ]
+            city = "Ville inconnue"
+            for selector in city_selectors:
+                try:
+                    elements = driver.find_elements(By.CSS_SELECTOR, selector)
+                    for element in elements:
+                        text = element.text.strip()
+                        if text and len(text) < 100:  # Reasonable length for city
+                            # Look for city patterns in the text
+                            if 'noisy' in text.lower() or 'paris' in text.lower() or 'ville' in text.lower():
+                                # Extract city from text like "Noisy-le-sec" or "PARIS"
+                                words = text.split()
+                                for word in words:
+                                    if len(word) > 3 and ('-' in word or word.isupper()):
+                                        city = word.title()
+                                        break
+                                if city != "Ville inconnue":
+                                    break
+                            elif len(text) < 50 and not text.startswith('Résidence'):
+                                city = text
+                                break
+                    if city != "Ville inconnue":
+                        break
+                except:
+                    continue
+        except:
+            city = "Ville inconnue"
+        
         # Wait for main content or availability spans
         try:
             WebDriverWait(driver, 15).until(
@@ -119,7 +150,7 @@ def check_availability(link):
             print(f"Switched to iframe for {link}")
         except:
             print(f"No iframe found for {link}")
-            return False
+            return (False, city)
                 # Find all td containing avail_area spans
         avail_tds = driver.find_elements(By.XPATH, '//td[span[starts-with(@id,"avail_area_")]]')
         print(f"Found {len(avail_tds)} availability cells for {link}")
@@ -150,19 +181,19 @@ def check_availability(link):
                     statuses.append('inconnu')
             # Prioritize: disponible_immediat > disponible > a_venir > indisponible
             if 'disponible_immediat' in statuses:
-                return True
+                return (True, city)
             elif 'disponible' in statuses:
-                return True
+                return (True, city)
             elif 'a_venir' in statuses:
-                return 'soon'
+                return ('soon', city)
             else:
-                return False
+                return (False, city)
         else:
             print(f"No availability cells found for {link}, assuming indisponible")
-            return False
+            return (False, city)
     except Exception as e:
         print(f"Erreur lors de la vérification de {link}: {e}")
-        return None
+        return (None, city)
     finally:
         driver.quit()
 
@@ -173,12 +204,12 @@ def main():
     available_residences = []
     
     for link in links:
-        status = check_availability(link)
+        status, city = check_availability(link)
         
         if status is True:
             # Extraire le nom de la résidence depuis l'URL
             residence_name = link.split('/')[-1].replace('-', ' ').title()
-            available_residences.append(f"🏠 {residence_name}\n🔗 {link}")
+            available_residences.append(f"🏠 {residence_name}\n🏙️ {city}\n🔗 {link}")
             print(f"Disponibilité trouvée : {link}")
         elif status == 'soon':
             print(f"Disponibilité à venir : {link}")
@@ -188,10 +219,6 @@ def main():
             print(f"Statut inconnu : {link}")
         
         time.sleep(1)
-    
-    # Sauvegarder les statuts (pour référence future si besoin)
-    current_statuses = {link: check_availability(link) for link in links}
-    save_statuses(current_statuses)
     
     # Envoyer email quotidien avec les résidences disponibles
     if available_residences:
@@ -213,4 +240,10 @@ def main():
         #     send_email(subject, body, to_email)
 
 if __name__ == "__main__":
-    main()
+    # Test d'une URL spécifique
+    test_url = "https://www.fac-habitat.com/fr/residences-etudiantes/id-39-claude-monet"
+    print(f"Test de l'URL : {test_url}")
+    status, city = check_availability(test_url)
+    print(f"Statut : {status}, Ville : {city}")
+    
+    # main()  # Commenté pour le test
