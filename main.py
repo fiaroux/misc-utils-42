@@ -209,7 +209,7 @@ def main():
         if status is True:
             # Extraire le nom de la résidence depuis l'URL
             residence_name = link.split('/')[-1].replace('-', ' ').title()
-            available_residences.append(f"🏠 {residence_name}\n🏙️ {city}\n🔗 {link}")
+            available_residences.append(f"{residence_name}\n{city}\n{link}")
             print(f"Disponibilité trouvée : {link}")
         elif status == 'soon':
             print(f"Disponibilité à venir : {link}")
@@ -222,7 +222,7 @@ def main():
     
     # Envoyer email quotidien avec les résidences disponibles
     if available_residences:
-        subject = f"🏠 Résidences Fac Habitat Disponibles - {len(available_residences)} trouvées"
+        subject = f"Résidences Fac Habitat Disponibles - {len(available_residences)} trouvées"
         body = "Voici les résidences actuellement disponibles :\n\n" + "\n\n".join(available_residences)
         to_email = os.getenv('EMAIL_TO')
         if to_email:
@@ -233,7 +233,7 @@ def main():
     else:
         print("Aucune résidence disponible trouvée.")
         # Optionnel : envoyer un email quand rien n'est disponible
-        # subject = "🏠 Aucune résidence Fac Habitat disponible"
+        # subject = "Aucune résidence Fac Habitat disponible"
         # body = "Aucune résidence n'est actuellement disponible pour le moment."
         # to_email = os.getenv('EMAIL_TO')
         # if to_email:
