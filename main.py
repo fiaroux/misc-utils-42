@@ -51,7 +51,22 @@ def get_residence_links():
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument('--remote-debugging-port=9222')
-    driver = webdriver.Chrome(service=Service('/usr/local/bin/chromedriver'), options=options)
+    
+    # Detect environment and set appropriate chromedriver path
+    if os.path.exists('/usr/local/bin/chromedriver'):
+        # GitHub Actions / Ubuntu
+        chromedriver_path = '/usr/local/bin/chromedriver'
+    elif os.path.exists('/opt/homebrew/bin/chromedriver'):
+        # macOS with Homebrew
+        chromedriver_path = '/opt/homebrew/bin/chromedriver'
+    else:
+        # Fallback - let selenium find it automatically
+        chromedriver_path = None
+    
+    if chromedriver_path:
+        driver = webdriver.Chrome(service=Service(chromedriver_path), options=options)
+    else:
+        driver = webdriver.Chrome(options=options)
     
     for page in range(1, 8):  # Assuming 7 pages
         if page == 1:
@@ -86,7 +101,22 @@ def check_availability(link):
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument('--remote-debugging-port=9222')
-    driver = webdriver.Chrome(service=Service('/opt/homebrew/bin/chromedriver'), options=options)
+    
+    # Detect environment and set appropriate chromedriver path
+    if os.path.exists('/usr/local/bin/chromedriver'):
+        # GitHub Actions / Ubuntu
+        chromedriver_path = '/usr/local/bin/chromedriver'
+    elif os.path.exists('/opt/homebrew/bin/chromedriver'):
+        # macOS with Homebrew
+        chromedriver_path = '/opt/homebrew/bin/chromedriver'
+    else:
+        # Fallback - let selenium find it automatically
+        chromedriver_path = None
+    
+    if chromedriver_path:
+        driver = webdriver.Chrome(service=Service(chromedriver_path), options=options)
+    else:
+        driver = webdriver.Chrome(options=options)
     try:
         driver.get(link)
         
