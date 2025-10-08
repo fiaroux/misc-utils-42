@@ -46,6 +46,19 @@ def get_residence_links():
     base_url = "https://www.fac-habitat.com/fr/residences-ile-de-france"
     links = []
     options = webdriver.ChromeOptions()
+    
+    # Detect environment and set appropriate Chrome binary path
+    if os.path.exists('/usr/bin/google-chrome-stable'):
+        # Ubuntu / GitHub Actions
+        options.binary_location = '/usr/bin/google-chrome-stable'
+    elif os.path.exists('/usr/bin/google-chrome'):
+        # Alternative Ubuntu path
+        options.binary_location = '/usr/bin/google-chrome'
+    elif os.path.exists('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'):
+        # macOS
+        options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    # If none found, let Chrome use default path
+    
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
@@ -95,7 +108,19 @@ def get_residence_links():
 
 def check_availability(link):
     options = webdriver.ChromeOptions()
-    options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    
+    # Detect environment and set appropriate Chrome binary path
+    if os.path.exists('/usr/bin/google-chrome-stable'):
+        # Ubuntu / GitHub Actions
+        options.binary_location = '/usr/bin/google-chrome-stable'
+    elif os.path.exists('/usr/bin/google-chrome'):
+        # Alternative Ubuntu path
+        options.binary_location = '/usr/bin/google-chrome'
+    elif os.path.exists('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'):
+        # macOS
+        options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    # If none found, let Chrome use default path
+    
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
