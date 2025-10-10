@@ -11,6 +11,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import json
 # from webdriver_manager.chrome import ChromeDriverManager  # Commented out for GitHub Actions
 
 # Charger les variables d'environnement
@@ -277,15 +278,36 @@ def main():
     print(f"Trouvé {len(links)} résidences.")
     
     available_residences = []
+    new_available_residences = []  # Nouvelles disponibilités seulement
+    
+    # Charger l'état précédent
+    previous_status = {}
+    if os.path.exists('availability_status.json'):
+        try:
+            with open('availability_status.json', 'r') as f:
+                previous_status = json.load(f)
+        except:
+            previous_status = {}
+    
+    current_status = {}
     
     for link in links:
         status, city = check_availability(link)
+        residence_id = link.split('/')[-1]
+        current_status[residence_id] = {'status': status, 'city': city, 'link': link}
         
         if status is True:
             # Extraire le nom de la résidence depuis l'URL
             residence_name = link.split('/')[-1].replace('-', ' ').title()
             available_residences.append(f"{residence_name}\n{city}\n{link}")
-            print(f"Disponibilité trouvée : {link}")
+            
+            # Vérifier si c'est une NOUVELLE disponibilité
+            was_available_before = previous_status.get(residence_id, {}).get('status') is True
+            if not was_available_before:
+                new_available_residences.append(f"{residence_name}\n{city}\n{link}")
+                print(f"NOUVELLE disponibilité : {link}")
+            else:
+                print(f"Toujours disponible : {link}")
         elif status == 'soon':
             print(f"Disponibilité à venir : {link}")
         elif status is False:
@@ -295,16 +317,28 @@ def main():
         
         time.sleep(1)
     
-    # Envoyer email quotidien avec les résidences disponibles
-    if available_residences:
-        subject = f"Résidences Fac Habitat Disponibles - {len(available_residences)} trouvées"
-        body = "Voici les résidences actuellement disponibles :\n\n" + "\n\n".join(available_residences)
+    # Sauvegarder l'état actuel
+    try:
+        with open('availability_status.json', 'w') as f:
+            json.dump(current_status, f, indent=2)
+    except Exception as e:
+        print(f"Erreur lors de la sauvegarde du statut: {e}")
+    
+    # Envoyer email SEULEMENT pour les NOUVELLES disponibilités
+    if new_available_residences:
+        subject = f"NOUVELLES Résidences Fac Habitat Disponibles - {len(new_available_residences)} trouvées"
+        body = "Voici les résidences qui viennent de devenir disponibles :\n\n" + "\n\n".join(new_available_residences)
+        if len(available_residences) > len(new_available_residences):
+            body += f"\n\nAu total, {len(available_residences)} résidences sont actuellement disponibles."
         to_email = os.getenv('EMAIL_TO')
         if to_email:
             send_email(subject, body, to_email)
-            print(f"Email envoyé avec {len(available_residences)} résidences disponibles")
+            print(f"Email envoyé pour {len(new_available_residences)} nouvelles disponibilités")
         else:
             print("Variable d'environnement EMAIL_TO non configurée. Aucun email envoyé.")
+    elif available_residences:
+        print(f"{len(available_residences)} résidences disponibles (mais pas nouvelles)")
+        # Optionnel: envoyer un résumé hebdomadaire ou sur demande
     else:
         print("Aucune résidence disponible trouvée.")
         # Envoyer un email de confirmation que le scraper fonctionne même s'il n'y a pas de disponibilité
