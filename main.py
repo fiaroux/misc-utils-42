@@ -149,6 +149,8 @@ def check_availability(link):
         try:
             # Try common selectors for city/location
             city_selectors = [
+                '.coordonnees-fiche div',  # Address section with full address
+                '.bloc-adresse-fiche .coordonnees-fiche div',  # Specific address block
                 '.breadcrumb li:last-child',  # Breadcrumb last item
                 'h1',  # Main title
                 '.ville',  # Ville class
@@ -157,7 +159,9 @@ def check_availability(link):
                 'div.location',  # Location div
                 'h1 + p',  # Paragraph after h1
                 '[class*="ville"]',  # Any element with ville in class
-                '[class*="city"]'  # Any element with city in class
+                '[class*="city"]',  # Any element with city in class
+                '.breadcrumb a:last-child',  # Last breadcrumb link
+                'title',  # Page title
             ]
             city = "Ville inconnue"
             for selector in city_selectors:
@@ -165,25 +169,41 @@ def check_availability(link):
                     elements = driver.find_elements(By.CSS_SELECTOR, selector)
                     for element in elements:
                         text = element.text.strip()
-                        if text and len(text) < 100:  # Reasonable length for city
-                            # Look for city patterns in the text
-                            if 'noisy' in text.lower() or 'paris' in text.lower() or 'ville' in text.lower():
-                                # Extract city from text like "Noisy-le-sec" or "PARIS"
+                        if text and len(text) < 150:  # Allow longer text for full addresses
+                            print(f"Test sélecteur '{selector}': '{text}'")
+                            
+                            # Look for postal code pattern (5 digits) followed by city name
+                            import re
+                            postal_match = re.search(r'\b(\d{5})\s+([A-Za-zÀ-ÿ\s\-]+(?:sur|le|la|les|du|des|de|aux|en)?\s*[A-Za-zÀ-ÿ\s\-]*)\b', text)
+                            if postal_match:
+                                postal_code = postal_match.group(1)
+                                city_name = postal_match.group(2).strip().title()
+                                if len(city_name) > 2:  # Valid city name
+                                    city = city_name
+                                    print(f"Ville extraite depuis adresse: {city} (CP: {postal_code})")
+                                    break
+                            
+                            # Fallback: look for city patterns in the text
+                            if any(keyword in text.lower() for keyword in ['noisy', 'paris', 'ville', 'boulogne', 'neuilly', 'issy', 'suresnes', 'puteaux', 'courbevoie', 'asnieres', 'colombes', 'argenteuil', 'sartrouville', 'versailles', 'saint-', 'le-', 'la-', 'les-', 'du-', 'des-', 'de ', 'sur-', 'sous-', 'aux-', 'bures', 'yvette']):
                                 words = text.split()
                                 for word in words:
-                                    if len(word) > 3 and ('-' in word or word.isupper()):
+                                    if len(word) > 3 and ('-' in word or word.isupper() or any(city_part in word.lower() for city_part in ['paris', 'noisy', 'boulogne', 'neuilly', 'issy', 'suresnes', 'puteaux', 'courbevoie', 'asnieres', 'colombes', 'argenteuil', 'sartrouville', 'versailles', 'bures', 'yvette'])):
                                         city = word.title()
+                                        print(f"Ville trouvée avec sélecteur '{selector}': {city}")
                                         break
                                 if city != "Ville inconnue":
                                     break
-                            elif len(text) < 50 and not text.startswith('Résidence'):
+                            elif len(text) < 50 and not text.startswith('Résidence') and not text.startswith('3 ') and not text.startswith('Tél'):
                                 city = text
+                                print(f"Ville trouvée avec sélecteur '{selector}': {city}")
                                 break
                     if city != "Ville inconnue":
                         break
-                except:
+                except Exception as e:
+                    print(f"Erreur avec sélecteur '{selector}': {e}")
                     continue
-        except:
+        except Exception as e:
+            print(f"Erreur lors de l'extraction de ville: {e}")
             city = "Ville inconnue"
         
         # Wait for main content or availability spans
@@ -287,12 +307,13 @@ def main():
             print("Variable d'environnement EMAIL_TO non configurée. Aucun email envoyé.")
     else:
         print("Aucune résidence disponible trouvée.")
-        # Optionnel : envoyer un email quand rien n'est disponible
-        # subject = "Aucune résidence Fac Habitat disponible"
-        # body = "Aucune résidence n'est actuellement disponible pour le moment."
-        # to_email = os.getenv('EMAIL_TO')
-        # if to_email:
-        #     send_email(subject, body, to_email)
+        # Envoyer un email de confirmation que le scraper fonctionne même s'il n'y a pas de disponibilité
+        subject = "Rapport quotidien Fac Habitat - Aucune disponibilité"
+        body = f"Le scraper a vérifié {len(links)} résidences ce {time.strftime('%d/%m/%Y à %H:%M')}.\n\nAucune résidence n'est actuellement disponible.\n\nLe scraper fonctionne correctement et continuera à vérifier automatiquement."
+        to_email = os.getenv('EMAIL_TO')
+        if to_email:
+            send_email(subject, body, to_email)
+            print("Email de confirmation envoyé (aucune disponibilité)")
 
 if __name__ == "__main__":
     # Test d'une URL spécifique
