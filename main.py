@@ -12,7 +12,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import json
-# from webdriver_manager.chrome import ChromeDriverManager  # Commented out for GitHub Actions
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -43,44 +42,30 @@ def send_email(subject, body, to_email):
     except Exception as e:
         print(f"Erreur lors de l'envoi d'email: {e}")
 
-def get_residence_links():
-    base_url = "https://www.fac-habitat.com/fr/residences-ile-de-france"
-    links = []
+def create_driver():
+    """Crée et retourne un driver Chrome configuré. Selenium 4.6+ gère automatiquement ChromeDriver."""
     options = webdriver.ChromeOptions()
     
     # Detect environment and set appropriate Chrome binary path
     if os.path.exists('/usr/bin/google-chrome-stable'):
-        # Ubuntu / GitHub Actions
         options.binary_location = '/usr/bin/google-chrome-stable'
     elif os.path.exists('/usr/bin/google-chrome'):
-        # Alternative Ubuntu path
         options.binary_location = '/usr/bin/google-chrome'
     elif os.path.exists('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'):
-        # macOS
         options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-    # If none found, let Chrome use default path
     
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
-    options.add_argument('--remote-debugging-port=9222')
     
-    # Detect environment and set appropriate chromedriver path
-    if os.path.exists('/usr/local/bin/chromedriver'):
-        # GitHub Actions / Ubuntu
-        chromedriver_path = '/usr/local/bin/chromedriver'
-    elif os.path.exists('/opt/homebrew/bin/chromedriver'):
-        # macOS with Homebrew
-        chromedriver_path = '/opt/homebrew/bin/chromedriver'
-    else:
-        # Fallback - let selenium find it automatically
-        chromedriver_path = None
-    
-    if chromedriver_path:
-        driver = webdriver.Chrome(service=Service(chromedriver_path), options=options)
-    else:
-        driver = webdriver.Chrome(options=options)
+    # Selenium 4.6+ gère automatiquement le téléchargement du bon ChromeDriver
+    return webdriver.Chrome(options=options)
+
+def get_residence_links():
+    base_url = "https://www.fac-habitat.com/fr/residences-ile-de-france"
+    links = []
+    driver = create_driver()
     
     for page in range(1, 8):  # Assuming 7 pages
         if page == 1:
@@ -108,41 +93,7 @@ def get_residence_links():
     return links
 
 def check_availability(link):
-    options = webdriver.ChromeOptions()
-    
-    # Detect environment and set appropriate Chrome binary path
-    if os.path.exists('/usr/bin/google-chrome-stable'):
-        # Ubuntu / GitHub Actions
-        options.binary_location = '/usr/bin/google-chrome-stable'
-    elif os.path.exists('/usr/bin/google-chrome'):
-        # Alternative Ubuntu path
-        options.binary_location = '/usr/bin/google-chrome'
-    elif os.path.exists('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'):
-        # macOS
-        options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-    # If none found, let Chrome use default path
-    
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--remote-debugging-port=9222')
-    
-    # Detect environment and set appropriate chromedriver path
-    if os.path.exists('/usr/local/bin/chromedriver'):
-        # GitHub Actions / Ubuntu
-        chromedriver_path = '/usr/local/bin/chromedriver'
-    elif os.path.exists('/opt/homebrew/bin/chromedriver'):
-        # macOS with Homebrew
-        chromedriver_path = '/opt/homebrew/bin/chromedriver'
-    else:
-        # Fallback - let selenium find it automatically
-        chromedriver_path = None
-    
-    if chromedriver_path:
-        driver = webdriver.Chrome(service=Service(chromedriver_path), options=options)
-    else:
-        driver = webdriver.Chrome(options=options)
+    driver = create_driver()
     try:
         driver.get(link)
         
@@ -285,8 +236,21 @@ def main():
     if os.path.exists('availability_status.json'):
         try:
             with open('availability_status.json', 'r') as f:
-                previous_status = json.load(f)
-        except:
+                raw_status = json.load(f)
+                # Gérer l'ancien format (URL complète -> bool) et le nouveau format (residence_id -> dict)
+                for key, value in raw_status.items():
+                    if isinstance(value, bool):
+                        # Ancien format: convertir URL -> residence_id avec dict
+                        rid = key.split('/')[-1]
+                        previous_status[rid] = {'status': value, 'city': 'Ville inconnue', 'link': key}
+                    elif isinstance(value, dict):
+                        # Nouveau format: déjà bon
+                        previous_status[key] = value
+                    else:
+                        # Format inconnu, ignorer
+                        pass
+        except Exception as e:
+            print(f"Erreur lors du chargement de l'état précédent: {e}")
             previous_status = {}
     
     current_status = {}
@@ -350,10 +314,4 @@ def main():
             print("Email de confirmation envoyé (aucune disponibilité)")
 
 if __name__ == "__main__":
-    # Test d'une URL spécifique
-    test_url = "https://www.fac-habitat.com/fr/residences-etudiantes/id-39-claude-monet"
-    print(f"Test de l'URL : {test_url}")
-    status, city = check_availability(test_url)
-    print(f"Statut : {status}, Ville : {city}")
-    
-    # main()  # Commenté pour le test
+    main()
