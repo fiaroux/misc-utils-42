@@ -126,10 +126,13 @@ def check_availability(link):
                             
                             # Look for postal code pattern (5 digits) followed by city name
                             import re
-                            postal_match = re.search(r'\b(\d{5})\s+([A-Za-zÀ-ÿ\s\-]+(?:sur|le|la|les|du|des|de|aux|en)?\s*[A-Za-zÀ-ÿ\s\-]*)\b', text)
+                            postal_match = re.search(r'(\d{5})\s+(.+)$', text)
                             if postal_match:
                                 postal_code = postal_match.group(1)
-                                city_name = postal_match.group(2).strip().title()
+                                # Capitaliser chaque mot correctement (gérer les accents)
+                                raw_city = postal_match.group(2).strip()
+                                city_name = '-'.join(w.capitalize() for w in raw_city.split('-'))
+                                city_name = ' '.join(w.capitalize() if not w[0].isupper() else w for w in city_name.split())
                                 if len(city_name) > 2:  # Valid city name
                                     city = city_name
                                     print(f"Ville extraite depuis adresse: {city} (CP: {postal_code})")
@@ -187,12 +190,22 @@ def check_availability(link):
                 span = td.find_element(By.CSS_SELECTOR, 'span[id^="avail_area_"]')
                 text = span.text.strip().lower()
                 classes = span.get_attribute('class')
-                has_button = len(td.find_elements(By.CSS_SELECTOR, 'a.btn_reserver')) > 0
+                buttons = td.find_elements(By.CSS_SELECTOR, 'a.btn_reserver')
                 
-                # Priorité au texte "aucune disponibilité"
+                # Vérifier le texte du bouton s'il existe
+                has_real_reservation = False
+                if buttons:
+                    btn_text = buttons[0].text.strip().lower()
+                    # "Déposer une demande" = pas de vraie dispo, juste une liste d'attente
+                    if 'réserver' in btn_text or 'reserver' in btn_text:
+                        has_real_reservation = True
+                    else:
+                        print(f"  Bouton trouvé mais texte='{btn_text}' (pas une vraie réservation)")
+                
+                # Priorité au texte "aucune disponibilité" — même s'il y a un bouton
                 if 'aucune disponibilité' in text:
                     statuses.append('indisponible')
-                elif has_button:
+                elif has_real_reservation:
                     statuses.append('disponible_immediat')
                 elif 'disponibilité à venir' in text:
                     statuses.append('a_venir')
