@@ -1,3 +1,4 @@
+import re
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -62,10 +63,9 @@ def create_driver():
     # Selenium 4.6+ gère automatiquement le téléchargement du bon ChromeDriver
     return webdriver.Chrome(options=options)
 
-def get_residence_links():
+def get_residence_links(driver):
     base_url = "https://www.fac-habitat.com/fr/residences-ile-de-france"
     links = []
-    driver = create_driver()
     
     for page in range(1, 8):  # Assuming 7 pages
         if page == 1:
@@ -89,11 +89,9 @@ def get_residence_links():
         except Exception as e:
             print(f"Erreur lors de la récupération de la page {page}: {e}")
         time.sleep(2)  # Respectful delay
-    driver.quit()
     return links
 
-def check_availability(link):
-    driver = create_driver()
+def check_availability(driver, link):
     try:
         driver.get(link)
         
@@ -125,7 +123,6 @@ def check_availability(link):
                             print(f"Test sélecteur '{selector}': '{text}'")
                             
                             # Look for postal code pattern (5 digits) followed by city name
-                            import re
                             postal_match = re.search(r'(\d{5})\s+(.+)$', text)
                             if postal_match:
                                 postal_code = postal_match.group(1)
@@ -181,7 +178,7 @@ def check_availability(link):
         except:
             print(f"No iframe found for {link}")
             return (False, city)
-                # Find all td containing avail_area spans
+        # Find all td containing avail_area spans
         avail_tds = driver.find_elements(By.XPATH, '//td[span[starts-with(@id,"avail_area_")]]')
         print(f"Found {len(avail_tds)} availability cells for {link}")
         if avail_tds:
@@ -235,88 +232,104 @@ def check_availability(link):
         print(f"Erreur lors de la vérification de {link}: {e}")
         return (None, city)
     finally:
-        driver.quit()
+        # Revenir au contexte principal (hors iframe)
+        driver.switch_to.default_content()
 
 def main():
-    links = get_residence_links()
-    print(f"Trouvé {len(links)} résidences.")
-    
-    available_residences = []
-    new_available_residences = []  # Nouvelles disponibilités seulement
-    
-    # Charger l'état précédent
-    previous_status = {}
-    if os.path.exists('availability_status.json'):
-        try:
-            with open('availability_status.json', 'r') as f:
-                raw_status = json.load(f)
-                # Gérer l'ancien format (URL complète -> bool) et le nouveau format (residence_id -> dict)
-                for key, value in raw_status.items():
-                    if isinstance(value, bool):
-                        # Ancien format: convertir URL -> residence_id avec dict
-                        rid = key.split('/')[-1]
-                        previous_status[rid] = {'status': value, 'city': 'Ville inconnue', 'link': key}
-                    elif isinstance(value, dict):
-                        # Nouveau format: déjà bon
-                        previous_status[key] = value
-                    else:
-                        # Format inconnu, ignorer
-                        pass
-        except Exception as e:
-            print(f"Erreur lors du chargement de l'état précédent: {e}")
-            previous_status = {}
-    
-    current_status = {}
-    
-    for link in links:
-        status, city = check_availability(link)
-        residence_id = link.split('/')[-1]
-        current_status[residence_id] = {'status': status, 'city': city, 'link': link}
-        
-        if status is True:
-            # Extraire le nom de la résidence depuis l'URL
-            residence_name = link.split('/')[-1].replace('-', ' ').title()
-            available_residences.append(f"{residence_name}\n{city}\n{link}")
-            
-            # Vérifier si c'est une NOUVELLE disponibilité
-            was_available_before = previous_status.get(residence_id, {}).get('status') is True
-            if not was_available_before:
-                new_available_residences.append(f"{residence_name}\n{city}\n{link}")
-                print(f"NOUVELLE disponibilité : {link}")
-            else:
-                print(f"Toujours disponible : {link}")
-        elif status == 'soon':
-            print(f"Disponibilité à venir : {link}")
-        elif status is False:
-            print(f"Aucune disponibilité : {link}")
-        else:
-            print(f"Statut inconnu : {link}")
-        
-        time.sleep(1)
-    
-    # Sauvegarder l'état actuel
+    driver = create_driver()
     try:
-        with open('availability_status.json', 'w') as f:
-            json.dump(current_status, f, indent=2)
-    except Exception as e:
-        print(f"Erreur lors de la sauvegarde du statut: {e}")
+        links = get_residence_links(driver)
+        print(f"Trouvé {len(links)} résidences.")
+        
+        available_residences = []
+        new_available_residences = []  # Nouvelles disponibilités seulement
+        soon_residences = []  # Disponibilités à venir
     
-    # Envoyer email SEULEMENT pour les NOUVELLES disponibilités
-    if new_available_residences:
-        subject = f"NOUVELLES Résidences Fac Habitat Disponibles - {len(new_available_residences)} trouvées"
-        body = "Voici les résidences qui viennent de devenir disponibles :\n\n" + "\n\n".join(new_available_residences)
-        if len(available_residences) > len(new_available_residences):
-            body += f"\n\nAu total, {len(available_residences)} résidences sont actuellement disponibles."
-        to_email = os.getenv('EMAIL_TO')
-        if to_email:
-            send_email(subject, body, to_email)
-            print(f"Email envoyé pour {len(new_available_residences)} nouvelles disponibilités")
+        # Charger l'état précédent
+        previous_status = {}
+        if os.path.exists('availability_status.json'):
+            try:
+                with open('availability_status.json', 'r') as f:
+                    raw_status = json.load(f)
+                    # Gérer l'ancien format (URL complète -> bool) et le nouveau format (residence_id -> dict)
+                    for key, value in raw_status.items():
+                        if isinstance(value, bool):
+                            # Ancien format: convertir URL -> residence_id avec dict
+                            rid = key.split('/')[-1]
+                            previous_status[rid] = {'status': value, 'city': 'Ville inconnue', 'link': key}
+                        elif isinstance(value, dict):
+                            # Nouveau format: déjà bon
+                            previous_status[key] = value
+                        else:
+                            # Format inconnu, ignorer
+                            pass
+            except Exception as e:
+                print(f"Erreur lors du chargement de l'état précédent: {e}")
+                previous_status = {}
+    
+        current_status = {}
+        
+        for link in links:
+            status, city = check_availability(driver, link)
+            residence_id = link.split('/')[-1]
+            current_status[residence_id] = {'status': status, 'city': city, 'link': link}
+            
+            if status is True:
+                residence_name = link.split('/')[-1].replace('-', ' ').title()
+                available_residences.append(f"{residence_name}\n{city}\n{link}")
+                
+                was_available_before = previous_status.get(residence_id, {}).get('status') is True
+                if not was_available_before:
+                    new_available_residences.append(f"{residence_name}\n{city}\n{link}")
+                    print(f"NOUVELLE disponibilité : {link}")
+                else:
+                    print(f"Toujours disponible : {link}")
+            elif status == 'soon':
+                residence_name = link.split('/')[-1].replace('-', ' ').title()
+                was_soon_before = previous_status.get(residence_id, {}).get('status') == 'soon'
+                if not was_soon_before:
+                    soon_residences.append(f"{residence_name}\n{city}\n{link}")
+                    print(f"NOUVELLE disponibilité à venir : {link}")
+                else:
+                    print(f"Toujours disponibilité à venir : {link}")
+            elif status is False:
+                print(f"Aucune disponibilité : {link}")
+            else:
+                print(f"Statut inconnu : {link}")
+            
+            time.sleep(1)
+        
+        # Sauvegarder l'état actuel
+        try:
+            with open('availability_status.json', 'w') as f:
+                json.dump(current_status, f, indent=2)
+        except Exception as e:
+            print(f"Erreur lors de la sauvegarde du statut: {e}")
+        
+        # Construire et envoyer l'email si changements détectés
+        email_parts = []
+        
+        if new_available_residences:
+            email_parts.append(f"{len(new_available_residences)} NOUVELLES DISPONIBILITES :\n\n" + "\n\n".join(new_available_residences))
+        
+        if soon_residences:
+            email_parts.append(f"{len(soon_residences)} DISPONIBILITES A VENIR :\n\n" + "\n\n".join(soon_residences))
+        
+        if email_parts:
+            subject = f"Fac Habitat - {len(new_available_residences)} dispo + {len(soon_residences)} à venir"
+            body = "\n\n---\n\n".join(email_parts)
+            if available_residences:
+                body += f"\n\n---\nAu total, {len(available_residences)} résidences sont actuellement disponibles."
+            to_email = os.getenv('EMAIL_TO')
+            if to_email:
+                send_email(subject, body, to_email)
+                print(f"Email envoyé ({len(new_available_residences)} nouvelles, {len(soon_residences)} à venir)")
+            else:
+                print("Variable d'environnement EMAIL_TO non configurée. Aucun email envoyé.")
         else:
-            print("Variable d'environnement EMAIL_TO non configurée. Aucun email envoyé.")
-    elif available_residences:
-        print(f"{len(available_residences)} résidences disponibles (mais pas nouvelles, pas d'email)")
-    else:
-        print("Aucune résidence disponible trouvée.")
+            print("Aucun changement détecté, pas d'email envoyé.")
+    finally:
+        driver.quit()
 
 if __name__ == "__main__":
     main()
