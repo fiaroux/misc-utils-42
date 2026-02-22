@@ -314,17 +314,9 @@ def main():
         else:
             print("Variable d'environnement EMAIL_TO non configurée. Aucun email envoyé.")
     elif available_residences:
-        print(f"{len(available_residences)} résidences disponibles (mais pas nouvelles)")
-        # Optionnel: envoyer un résumé hebdomadaire ou sur demande
+        print(f"{len(available_residences)} résidences disponibles (mais pas nouvelles, pas d'email)")
     else:
         print("Aucune résidence disponible trouvée.")
-        # Envoyer un email de confirmation que le scraper fonctionne même s'il n'y a pas de disponibilité
-        subject = "Rapport quotidien Fac Habitat - Aucune disponibilité"
-        body = f"Le scraper a vérifié {len(links)} résidences ce {time.strftime('%d/%m/%Y à %H:%M')}.\n\nAucune résidence n'est actuellement disponible.\n\nLe scraper fonctionne correctement et continuera à vérifier automatiquement."
-        to_email = os.getenv('EMAIL_TO')
-        if to_email:
-            send_email(subject, body, to_email)
-            print("Email de confirmation envoyé (aucune disponibilité)")
 
 if __name__ == "__main__":
     main()

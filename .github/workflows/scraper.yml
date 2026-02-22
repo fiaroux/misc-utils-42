@@ -2,8 +2,8 @@ name: Fac Habitat Scraper
 
 on:
   schedule:
-    # Runs every day at 9am, 3pm and 9pm
-    - cron: '0 9,15,21 * * *'
+    # Runs every hour
+    - cron: '0 * * * *'
   workflow_dispatch: # Allows manual triggering
 
 permissions:
