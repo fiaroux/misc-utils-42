@@ -15,7 +15,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-116-hortense-wild"
   },
   "id-114-alice-guy": {
-    "status": false,
+    "status": "soon",
     "city": "Saint Mand\u00e9",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-114-alice-guy"
   },
@@ -30,7 +30,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-86-residence-etudiante-le-parc-loos"
   },
   "id-82-residence-etudiante-pierre-ringenbach-sceaux": {
-    "status": false,
+    "status": "soon",
     "city": "Sceaux",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-82-residence-etudiante-pierre-ringenbach-sceaux"
   },
@@ -40,7 +40,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-81-residence-etudiante-julie-victoire-daubie-malakoff"
   },
   "id-80-residence-etudiante-erwin-guldner-sceaux": {
-    "status": true,
+    "status": "soon",
     "city": "Sceaux",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-80-residence-etudiante-erwin-guldner-sceaux"
   },
@@ -80,12 +80,12 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-46-belle-isle"
   },
   "id-38-les-hauts-bois": {
-    "status": true,
+    "status": "soon",
     "city": "Noisy-Le-Grand",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-38-les-hauts-bois"
   },
   "id-34-thibaud-de-champagne": {
-    "status": true,
+    "status": "soon",
     "city": "Meaux",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-34-thibaud-de-champagne"
   },
@@ -155,12 +155,12 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-48-l-arche"
   },
   "id-111-fourmont": {
-    "status": true,
+    "status": false,
     "city": "Herblay-Sur-Seine",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-111-fourmont"
   },
   "id-47-edouard-depreux": {
-    "status": true,
+    "status": "soon",
     "city": "Sceaux",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-47-edouard-depreux"
   },
@@ -185,7 +185,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-23-simone-de-beauvoir"
   },
   "id-43-thomas-edison": {
-    "status": true,
+    "status": "soon",
     "city": "Creteil",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-43-thomas-edison"
   },
@@ -195,12 +195,12 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-39-claude-monet"
   },
   "id-99-compas": {
-    "status": false,
+    "status": true,
     "city": "Palaiseau",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-99-compas"
   },
   "id-45-georges-mathe": {
-    "status": true,
+    "status": "soon",
     "city": "Villejuif",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-45-georges-mathe"
   },
@@ -261,7 +261,7 @@
   },
   "id-112-gainsbourg": {
     "status": false,
-    "city": "Pierrefitte",
+    "city": "Pierrefitte/seine",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-112-gainsbourg"
   },
   "id-98-gondoles": {
@@ -276,7 +276,7 @@
   },
   "id-91-ecrivains": {
     "status": false,
-    "city": "Carrie",
+    "city": "Carrie\u0300res-Sur-Seine",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-91-ecrivains"
   }
 }
