@@ -220,7 +220,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-29-dionysos"
   },
   "id-42-herodote": {
-    "status": null,
+    "status": false,
     "city": "Montmagny",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-42-herodote"
   },
