@@ -15,7 +15,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-116-hortense-wild"
   },
   "id-114-alice-guy": {
-    "status": "soon",
+    "status": false,
     "city": "Saint Mand\u00e9",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-114-alice-guy"
   },
@@ -210,7 +210,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-36-la-boetie"
   },
   "id-32-l-europe": {
-    "status": false,
+    "status": "soon",
     "city": "Champs-Sur-Marne",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-32-l-europe"
   },
