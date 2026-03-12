@@ -245,7 +245,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-100-leo-ferre"
   },
   "id-96-carmagnole": {
-    "status": "soon",
+    "status": true,
     "city": "La Courneuve",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-96-carmagnole"
   },
