@@ -79,6 +79,46 @@
     "city": "Maisons-Laffitte",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-46-belle-isle"
   },
+  "id-38-les-hauts-bois": {
+    "status": "soon",
+    "city": "Noisy-Le-Grand",
+    "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-38-les-hauts-bois"
+  },
+  "id-34-thibaud-de-champagne": {
+    "status": "soon",
+    "city": "Meaux",
+    "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-34-thibaud-de-champagne"
+  },
+  "id-31-paul-cezanne": {
+    "status": false,
+    "city": "Bussy-Saint-Georges",
+    "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-31-paul-cezanne"
+  },
+  "id-28-auguste-rodin": {
+    "status": false,
+    "city": "Paris",
+    "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-28-auguste-rodin"
+  },
+  "id-27-les-trois-arpents": {
+    "status": false,
+    "city": "Suresnes",
+    "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-27-les-trois-arpents"
+  },
+  "id-26-pablo-picasso": {
+    "status": false,
+    "city": "Nanterre",
+    "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-26-pablo-picasso"
+  },
+  "id-25-le-val-de-senart": {
+    "status": true,
+    "city": "Quincy Sous Senart",
+    "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-25-le-val-de-senart"
+  },
+  "id-55-le-studio": {
+    "status": false,
+    "city": "Saint-Denis",
+    "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-55-le-studio"
+  },
   "id-58-mis-pour-jeunes-actifs": {
     "status": false,
     "city": "Paris",
