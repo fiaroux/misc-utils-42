@@ -20,7 +20,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-114-alice-guy"
   },
   "id-89-residence-etudiante-le-parc-ii-loos": {
-    "status": null,
+    "status": true,
     "city": "Loos",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-89-residence-etudiante-le-parc-ii-loos"
   },
@@ -105,8 +105,8 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-27-les-trois-arpents"
   },
   "id-26-pablo-picasso": {
-    "status": null,
-    "city": "Ville inconnue",
+    "status": false,
+    "city": "Nanterre",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-26-pablo-picasso"
   },
   "id-25-le-val-de-senart": {
