@@ -210,7 +210,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-36-la-boetie"
   },
   "id-32-l-europe": {
-    "status": "soon",
+    "status": false,
     "city": "Champs-Sur-Marne",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-32-l-europe"
   },
