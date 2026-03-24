@@ -85,7 +85,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-38-les-hauts-bois"
   },
   "id-34-thibaud-de-champagne": {
-    "status": "soon",
+    "status": true,
     "city": "Meaux",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-34-thibaud-de-champagne"
   },
