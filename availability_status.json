@@ -150,7 +150,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-49-parc-avenue"
   },
   "id-48-l-arche": {
-    "status": "soon",
+    "status": false,
     "city": "Courbevoie",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-48-l-arche"
   },
