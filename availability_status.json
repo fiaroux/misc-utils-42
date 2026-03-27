@@ -175,7 +175,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-35-cesaria-evora"
   },
   "id-30-nelson-mandela": {
-    "status": "soon",
+    "status": false,
     "city": "Bussy-Saint-Georges",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-30-nelson-mandela"
   },
