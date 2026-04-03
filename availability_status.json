@@ -10,7 +10,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-121-madeleine-guitty"
   },
   "id-116-hortense-wild": {
-    "status": false,
+    "status": "soon",
     "city": "Chatillon",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-116-hortense-wild"
   },
@@ -245,7 +245,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-100-leo-ferre"
   },
   "id-96-carmagnole": {
-    "status": true,
+    "status": "soon",
     "city": "La Courneuve",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-96-carmagnole"
   },
