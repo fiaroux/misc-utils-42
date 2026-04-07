@@ -10,7 +10,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-121-madeleine-guitty"
   },
   "id-116-hortense-wild": {
-    "status": "soon",
+    "status": false,
     "city": "Chatillon",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-116-hortense-wild"
   },
@@ -180,7 +180,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-30-nelson-mandela"
   },
   "id-23-simone-de-beauvoir": {
-    "status": false,
+    "status": "soon",
     "city": "Massy",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-23-simone-de-beauvoir"
   },
