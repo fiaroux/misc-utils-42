@@ -5,7 +5,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-125-francois-huber"
   },
   "id-121-madeleine-guitty": {
-    "status": false,
+    "status": "soon",
     "city": "Corbeil Essonnes",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-121-madeleine-guitty"
   },
@@ -240,7 +240,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-41-l-alchimiste"
   },
   "id-100-leo-ferre": {
-    "status": false,
+    "status": true,
     "city": "Orly",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-100-leo-ferre"
   },
