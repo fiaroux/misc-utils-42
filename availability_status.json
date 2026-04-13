@@ -100,7 +100,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-28-auguste-rodin"
   },
   "id-27-les-trois-arpents": {
-    "status": false,
+    "status": true,
     "city": "Suresnes",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-27-les-trois-arpents"
   },
@@ -155,7 +155,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-48-l-arche"
   },
   "id-111-fourmont": {
-    "status": false,
+    "status": "soon",
     "city": "Herblay-Sur-Seine",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-111-fourmont"
   },
