@@ -1,11 +1,11 @@
 {
   "id-125-francois-huber": {
-    "status": "soon",
+    "status": false,
     "city": "Bures-Sur-Yvette",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-125-francois-huber"
   },
   "id-121-madeleine-guitty": {
-    "status": "soon",
+    "status": false,
     "city": "Corbeil Essonnes",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-121-madeleine-guitty"
   },
@@ -20,17 +20,17 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-114-alice-guy"
   },
   "id-89-residence-etudiante-le-parc-ii-loos": {
-    "status": true,
+    "status": false,
     "city": "Loos",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-89-residence-etudiante-le-parc-ii-loos"
   },
   "id-86-residence-etudiante-le-parc-loos": {
-    "status": true,
+    "status": false,
     "city": "Loos",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-86-residence-etudiante-le-parc-loos"
   },
   "id-82-residence-etudiante-pierre-ringenbach-sceaux": {
-    "status": "soon",
+    "status": false,
     "city": "Sceaux",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-82-residence-etudiante-pierre-ringenbach-sceaux"
   },
@@ -40,7 +40,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-81-residence-etudiante-julie-victoire-daubie-malakoff"
   },
   "id-80-residence-etudiante-erwin-guldner-sceaux": {
-    "status": "soon",
+    "status": false,
     "city": "Sceaux",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-80-residence-etudiante-erwin-guldner-sceaux"
   },
@@ -65,7 +65,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-76-edouard-martel"
   },
   "id-79-residence-etudiante-l-oree-du-campus-loos": {
-    "status": true,
+    "status": false,
     "city": "Loos",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-79-residence-etudiante-l-oree-du-campus-loos"
   },
@@ -80,17 +80,17 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-46-belle-isle"
   },
   "id-38-les-hauts-bois": {
-    "status": "soon",
+    "status": false,
     "city": "Noisy-Le-Grand",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-38-les-hauts-bois"
   },
   "id-34-thibaud-de-champagne": {
-    "status": true,
+    "status": false,
     "city": "Meaux",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-34-thibaud-de-champagne"
   },
   "id-31-paul-cezanne": {
-    "status": "soon",
+    "status": false,
     "city": "Bussy-Saint-Georges",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-31-paul-cezanne"
   },
@@ -100,7 +100,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-28-auguste-rodin"
   },
   "id-27-les-trois-arpents": {
-    "status": true,
+    "status": false,
     "city": "Suresnes",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-27-les-trois-arpents"
   },
@@ -110,7 +110,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-26-pablo-picasso"
   },
   "id-25-le-val-de-senart": {
-    "status": true,
+    "status": false,
     "city": "Quincy Sous Senart",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-25-le-val-de-senart"
   },
@@ -155,17 +155,17 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-48-l-arche"
   },
   "id-111-fourmont": {
-    "status": "soon",
+    "status": false,
     "city": "Herblay-Sur-Seine",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-111-fourmont"
   },
   "id-47-edouard-depreux": {
-    "status": "soon",
+    "status": false,
     "city": "Sceaux",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-47-edouard-depreux"
   },
   "id-24-lavoisier": {
-    "status": "soon",
+    "status": false,
     "city": "Orsay",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-24-lavoisier"
   },
@@ -180,12 +180,12 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-30-nelson-mandela"
   },
   "id-23-simone-de-beauvoir": {
-    "status": "soon",
+    "status": false,
     "city": "Massy",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-23-simone-de-beauvoir"
   },
   "id-43-thomas-edison": {
-    "status": "soon",
+    "status": false,
     "city": "Creteil",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-43-thomas-edison"
   },
@@ -195,17 +195,17 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-39-claude-monet"
   },
   "id-99-compas": {
-    "status": "soon",
+    "status": false,
     "city": "Palaiseau",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-99-compas"
   },
   "id-45-georges-mathe": {
-    "status": "soon",
+    "status": false,
     "city": "Villejuif",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-45-georges-mathe"
   },
   "id-36-la-boetie": {
-    "status": "soon",
+    "status": false,
     "city": "Drancy",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-36-la-boetie"
   },
@@ -225,17 +225,17 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-42-herodote"
   },
   "id-104-van-gogh": {
-    "status": true,
+    "status": false,
     "city": "La Rochette",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-104-van-gogh"
   },
   "id-102-picasso": {
-    "status": true,
+    "status": false,
     "city": "Villeneuve-Saint-Georges",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-102-picasso"
   },
   "id-41-l-alchimiste": {
-    "status": "soon",
+    "status": false,
     "city": "Cergy",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-41-l-alchimiste"
   },
@@ -245,17 +245,17 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-100-leo-ferre"
   },
   "id-96-carmagnole": {
-    "status": "soon",
+    "status": false,
     "city": "La Courneuve",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-96-carmagnole"
   },
   "id-103-pyramide": {
-    "status": true,
+    "status": false,
     "city": "Lieusaint",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-103-pyramide"
   },
   "id-95-bon-temps": {
-    "status": true,
+    "status": false,
     "city": "Melun",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-95-bon-temps"
   },
@@ -270,7 +270,7 @@
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-98-gondoles"
   },
   "id-97-colombier": {
-    "status": true,
+    "status": false,
     "city": "Lieusaint",
     "link": "https://www.fac-habitat.com/fr/residences-etudiantes/id-97-colombier"
   },
